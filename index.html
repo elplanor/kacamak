@@ -1,11 +1,441 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Seni Seviyorum</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/api/placeholder/800/600') no-repeat center center;
+            background-size: cover;
+            color: white;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 50px;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .memory-section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #343a40;
+        }
+        
+        .memory-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        
+        .memory-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .memory-img {
+            height: 750px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .memory-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .memory-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .memory-text {
+            color: #495057;
+        }
+        
+        .special-message {
+            background-color: #fff;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .message-box {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .message-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #e83e8c;
+            margin-bottom: 30px;
+        }
+        
+        .message-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #495057;
+        }
+        
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .player-btn {
+            background: none;
+            border: none;
+            color: #e83e8c;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .player-btn:hover {
+            color: #c71f69;
+        }
+        
+        .player-text {
+            margin-left: 10px;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        
+        .heart-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e83e8c'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: floating 4s ease-in infinite;
+        }
+        
+        @keyframes floating {
+            0% {
+                transform: translateY(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .footer h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
-    <h1>asdsafasfa</h1>
+    <!-- Animasyon İçin Arka Plan -->
+    <div class="heart-animation" id="heartContainer"></div>
+
+    <!-- Müzik Çalar -->
+    <div class="music-player">
+        <button id="playPauseBtn" class="player-btn">
+            <i class="fas fa-play" id="playIcon"></i>
+        </button>
+        <span class="player-text">Sensiz Olmaz..</span>
+        <audio id="bgMusic" loop>
+            <!-- Buraya müzik dosyanızın URL'sini ekleyin -->
+            <source src="files/Müslüm Gürses - Sensiz Olmaz [ Official Music Video © 2004 Kalan Müzik ].mp3" type="audio/mp3">
+        </audio>
+    </div>
+
+    <!-- Ana Sayfa Header -->
+    <header class="header" id="home">
+        <h1>Sevgili Aşkitom Feyza</h1>
+        <p>Hayatıma girdiğin günden beri her şey daha güzel, daha anlamlı. Her zaman hayatımda olup hayatımı anlamlandırmanı diliyorum..</p>
+        <div class="scroll-down" id="scrollBtn">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- Anılar Bölümü -->
+    <section class="memory-section" id="memories">
+        <div class="container">
+            <h2 class="section-title">O Ballardan Yerim.</h2>
+            <div class="row g-4">
+                <!-- Anı 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.38.jpeg" alt="İlk Buluşmamız" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">2015</small>
+                            <h5 class="memory-title">Sezon 1: İlk Temaslar</h5>
+                            <p class="memory-text">Buralara gelmek kolay olmadı..</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Anı 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.40.jpeg" alt="Sahilde Gün Batımı" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">2022</small>
+                            <h5 class="memory-title">Sezon 2: Karlı Bir Kış Akşamı</h5>
+                            <p class="memory-text">Vücutlarımız kenetlenmiş, karın keyfini çıkarıyorduk. O an sadece sen ve ben vardık dünyada..</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Anı 3 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.42.jpeg" alt="İlk Seyahatimiz" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">2022</small>
+                            <h5 class="memory-title">Sezon 3: Kuğulu Parkta AŞK!!!!!!</h5>
+                            <p class="memory-text">Yüzündeki o mutlu ifadeyi hiç unutmayacağım. Gözlerindeki ışıltı her şeye değer..</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Anı 4 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.44 (4).jpeg" alt="Doğum Günün" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">Sonsuz</small>
+                            <h5 class="memory-title">Sezon 4: Vedalar Zordur</h5>
+                            <p class="memory-text">Seni hep böyle sarmalamaya devam edeceğim..</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Anı 5 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.43 (1).jpeg" alt="Piknik Günümüz" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">2024</small>
+                            <h5 class="memory-title">Sezon 5: En Sevdiğimiz Aktivite</h5>
+                            <p class="memory-text">İnanılmaz bir kahvaltıydı. 2.si yapılmalı..(Hamarat manitam) </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Anı 6 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.44 (1).jpeg" alt="Konser Gecesi" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">2024</small>
+                            <h5 class="memory-title">Sezon 6: Biraz Da Şık</h5>
+                            <p class="memory-text">Çok güzelsin. Sadece bunu yazmak istedim, seni görüp de büyülenmemek mümkün değil..</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Anı 6 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.45 (2).jpeg" alt="Konser Gecesi" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">2050</small>
+                            <h5 class="memory-title">Sezon 7: Büyük Sözler</h5>
+                            <p class="memory-text">50 yaşına benimle gireceksin. Bu olacak.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Anı 6 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.45.jpeg" alt="Konser Gecesi" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">2027-2028</small>
+                            <h5 class="memory-title">Sezon 8: Çok Yakında</h5>
+                            <p class="memory-text">Bu da olacak.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Anı 6 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="memory-card">
+                        <img src="files/WhatsApp Image 2025-03-01 at 15.32.43.jpeg" alt="Konser Gecesi" class="memory-img">
+                        <div class="card-body">
+                            <small class="memory-date">202020202020202020202020</small>
+                            <h5 class="memory-title">Sezon 9: Bu Dizi Bitmez</h5>
+                            <p class="memory-text">Ve ben seni her şeyden daha çok sevmeye devam edeceğim.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Özel Mesaj Bölümü -->
+    <section class="special-message" id="message">
+        <div class="container">
+            <div class="message-box">
+                <h2 class="message-title">Sana Söylemek İstediklerim</h2>
+                <div class="message-text">
+                    <p>Sevgilim,</p>
+                    <p>Bazen düşünüyorum da, hayatta en şanslı olduğum an seninle tanıştığım andı. Gülüşün, gözlerindeki o ışıltı, sesindeki sıcaklık... Her detayınla benim için çok özelsin.</p>
+                    <p>Aramızda yaşanan küçük anlaşmazlık için çok üzgünüm. Belki seni incittim, belki yanlış anlaşıldım, ama bilmeni isterim ki kalbimde her zaman en özel yere sahipsin.</p>
+                    <p>Sen benim en iyi arkadaşım, en güzel aşkım, en samimi sırdaşımsın. Seninle geçirdiğim her an, birlikte güldüğümüz her saniye benim için paha biçilemez.</p>
+                    <p>Seni çok seviyorum ve bu hiç değişmeyecek. Hataları düzeltmek, yeniden başlamak için her zaman bir şans var. Hayatımda olduğun için şanslıyım.</p>
+                    <p>Sonsuza kadar...</p>
+                    <p class="text-end">❤️ Dostun, Arkadaşın, Sevgilin Ahmet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h2>Seni Çok Seviyorum</h2>
+            <p>Her gün, her an, sonsuza dek...</p>
+            <p>© 2025 - Senin için hazırlandı ❤️</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kalp animasyonu için
+            const heartContainer = document.getElementById('heartContainer');
+            
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+                heartContainer.appendChild(heart);
+                
+                // Belirli bir süre sonra kalpçiği kaldır
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }
+            
+            // Her 300ms'de bir kalp oluştur
+            setInterval(createHeart, 300);
+            
+            // Müzik çalar
+            const audio = document.getElementById('bgMusic');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const playIcon = document.getElementById('playIcon');
+            
+            playPauseBtn.addEventListener('click', function() {
+                if (audio.paused) {
+                    audio.play();
+                    playIcon.classList.remove('fa-play');
+                    playIcon.classList.add('fa-pause');
+                } else {
+                    audio.pause();
+                    playIcon.classList.remove('fa-pause');
+                    playIcon.classList.add('fa-play');
+                }
+            });
+            
+            // Aşağı kaydırma butonu
+            document.getElementById('scrollBtn').addEventListener('click', function() {
+                document.getElementById('memories').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
